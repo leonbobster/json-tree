@@ -31,7 +31,8 @@ const scalarRenderer = (scalarNode) => {
 const arrayRenderer = arrayNode => {
     const values = arrayNode.values.map(val => renderTree(val)).join('')
     const htmlClass = !arrayNode.expanded && arrayNode.level > 0 ? 'class="collapsed"' : ''
-    return `<span>[</span><ul ${htmlClass}>${values}</ul><span>]</span>`
+    const comma = arrayNode.parent instanceof ArrayNode && arrayNode.hasNextSibling ? ', ' : ''
+    return `<span>[</span><ul ${htmlClass}>${values}</ul><span>]${comma}</span>`
 }
 
 const objectRenderer = objectNode => {
@@ -42,8 +43,9 @@ const objectRenderer = objectNode => {
     })
     const htmlClass = !objectNode.expanded && objectNode.level > 0 ? 'class="collapsed"' : ''
     const ret = `<span>{</span><ul ${htmlClass}>${props.join('')}</ul><span>}</span>`
+    const comma = objectNode.parent instanceof ArrayNode && objectNode.hasNextSibling ? ', ' : ''
 
-    return objectNode.parent instanceof ArrayNode ? `<li>${ret}</li>` : ret
+    return objectNode.parent instanceof ArrayNode ? `<li>${ret}${comma}</li>` : ret
 }
 
 const renderTree = treeRenderer(scalarRenderer, arrayRenderer, objectRenderer)
