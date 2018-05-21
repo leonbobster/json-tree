@@ -66,22 +66,22 @@ function treeBuilder(elem, parent = null) {
     return new ScalarNode(parent, '' + elem)
 }
 
-function traverseTreeUpDown(node, callback, level = 0, hasNextSibling = false) {
+function traverseTree(node, callback, level = 0, hasNextSibling = false) {
     callback(node, level, hasNextSibling)
     if (node.getChildren() instanceof Array) {
         const children = node.getChildren();
         for (let i = 0; i < children.length; i++) {
-            traverseTreeUpDown(children[i], callback, level + 1, i < (children.length - 1))
+            traverseTree(children[i], callback, level + 1, i < (children.length - 1))
         }
     }
 }
 
-function traverseTreeDownUp(node, callback) {
+function traverseParents(node, callback) {
     if (node === null) {
         return
     }
     callback(node)
-    traverseTreeDownUp(node.parent, callback)
+    traverseParents(node.parent, callback)
 }
 
 module.exports = {
@@ -91,6 +91,6 @@ module.exports = {
     ObjectNode,
     PropertyNode,
     treeBuilder,
-    traverseTreeUpDown,
-    traverseTreeDownUp
+    traverseTree,
+    traverseParents
 }
